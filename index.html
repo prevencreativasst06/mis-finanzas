@@ -246,6 +246,8 @@ main{padding:4px 16px calc(var(--tabh) + var(--sb) + 28px);max-width:1080px;marg
 .check input{width:22px;height:22px;accent-color:var(--acc);flex:0 0 22px;margin:0}
 .hint{font-size:12.5px;color:var(--muted);margin:-4px 2px 12px}
 .per button{font-size:13px;padding:0 2px}
+.credit{display:grid;gap:3px;text-align:center;color:var(--muted);font-size:13px;margin:22px 0 10px}.credit b{color:var(--text);font-size:14px}.credit small{font-size:11.5px}
+#admBox.busy{opacity:.55;pointer-events:none}#admBox .tx .a .btn{white-space:nowrap}
 .seg.pg button{font-size:13px;padding:0 2px}
 .fixline{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;width:100%;margin-top:12px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.14);color:#fff;text-align:left;font-size:13px}
 .fixline b{white-space:nowrap;text-align:right}.fixline .big2{font-size:17px}
@@ -394,7 +396,7 @@ async function flush(){
  if(!queue.length){if(syncState!=='cargando')setSync('ok');return}
  flushing=true;setSync('guardando');
  try{while(queue.length){const batch=queue.slice(0,40);await api('cambios',batch);queue.splice(0,batch.length);saveQueue()}setSync('ok')}
- catch(e){if(e.code==='AUTH')return authLost();syncError=e.message;setSync('pendiente');clearTimeout(retryTimer);retryTimer=setTimeout(flush,20000)}
+ catch(e){if(e.code==='AUTH')return authLost();if(e.code==='BLOCKED')return kicked(e.message);syncError=e.message;setSync('pendiente');clearTimeout(retryTimer);retryTimer=setTimeout(flush,20000)}
  finally{flushing=false}
 }
 async function loadFromServer(){
@@ -417,13 +419,13 @@ async function loadFromServer(){
   setSync(queue.length?'pendiente':'ok');
   safeRender();
   if(typeof maybeAlert==='function')maybeAlert();
- }catch(e){if(e.code==='AUTH')return authLost();syncError=e.message;setSync('pendiente')}
+ }catch(e){if(e.code==='AUTH')return authLost();if(e.code==='BLOCKED')return kicked(e.message);syncError=e.message;setSync('pendiente')}
 }
 async function replaceAll(newData){
  data=normalize(newData);queue=[];saveQueue();cache();safeRender();
  if(!API_OK)return;
  setSync('guardando');
- try{await api('importar',data);setSync('ok')}catch(e){if(e.code==='AUTH')return authLost();syncError=e.message;setSync('pendiente');toast('No se pudo guardar en la Hoja. Revisa tu conexión.')}
+ try{await api('importar',data);setSync('ok')}catch(e){if(e.code==='AUTH')return authLost();if(e.code==='BLOCKED')return kicked(e.message);syncError=e.message;setSync('pendiente');toast('No se pudo guardar en la Hoja. Revisa tu conexión.')}
 }
 const SYNC_TXT={cargando:'Cargando',guardando:'Guardando',ok:'Guardado',pendiente:'Sin conexión',local:'Solo local'};
 const SYNC_LONG={cargando:'Conectando con tu Hoja de Google…',guardando:'Guardando cambios en tu Hoja de Google…',ok:'Todo está guardado en tu Hoja de Google.',pendiente:'No hay conexión con Google. Tus cambios están guardados en este teléfono y se subirán solos cuando vuelva la señal.',local:'Falta conectar la app con Google: los datos solo quedan en este teléfono.'};
@@ -706,13 +708,13 @@ reportes(){
 },
 configuracion(){
  return pageHead('configuracion','Configuración','','')+
- `<div class="card"><div class="card-h"><h2>👤 ${esc(userName())}</h2></div><p class="muted" style="margin:0 0 10px;font-size:14px">Tus datos están separados de los de las demás personas que usan la app.</p><div class="btns" style="margin-top:0"><button class="btn soft sm" onclick="startChangePin()">Cambiar PIN</button><button class="btn ghost sm" onclick="lockNow()">Bloquear</button></div><div class="btns"><button class="btn ghost sm" onclick="logout()">Cambiar de usuario</button></div></div>
+ `${isAdmin()?`<div class="card"><div class="card-h"><h2>👑 Administradora</h2></div><p class="muted" style="margin:0 0 10px;font-size:14px">Mira quién usa la app y quítale o devuélvele el acceso a quien quieras.</p><button class="btn soft block" onclick="adminView()">Administrar usuarios</button></div>`:''}<div class="card"><div class="card-h"><h2>👤 ${esc(userName())}</h2></div><p class="muted" style="margin:0 0 10px;font-size:14px">Tus datos están separados de los de las demás personas que usan la app.</p><div class="btns" style="margin-top:0"><button class="btn soft sm" onclick="startChangePin()">Cambiar PIN</button><button class="btn ghost sm" onclick="lockNow()">Bloquear</button></div><div class="btns"><button class="btn ghost sm" onclick="logout()">Cambiar de usuario</button></div></div>
  <div class="card"><div class="card-h"><h2>Apariencia</h2></div><div class="seg" style="margin:0">${[['auto','Automático'],['light','Claro'],['dark','Oscuro']].map(([v,l])=>`<button class="${prefs.theme===v?'on':''}" onclick="prefs.theme='${v}';savePrefs();render()">${l}</button>`).join('')}</div><div class="hint" style="margin:8px 2px 0">Automático sigue el modo claro/oscuro de tu iPhone.</div></div>
  <div class="card"><div class="card-h"><h2>Tus datos</h2><span class="sync s-${syncState}"><i></i><span>${SYNC_TXT[syncState]}</span></span></div><p id="syncLong" class="muted" style="margin:0 0 12px;font-size:14px">${SYNC_LONG[syncState]}</p>
  ${sheetUrl?`<a class="btn soft block" href="${esc(sheetUrl)}" target="_blank" rel="noopener">📄 Abrir mi Hoja de Google ↗</a>`:''}
  <div class="btns"><button class="btn ghost sm" onclick="exportData()">Exportar copia</button><label class="btn ghost sm">Importar copia<input type="file" accept=".json,application/json" hidden onchange="importData(this)"></label></div>
  <div class="btns"><button class="btn danger sm" onclick="wipeAll()">Borrar todos los datos</button></div></div>
- <p class="muted" style="text-align:center;font-size:12px">Mis Finanzas 360° · versión 5.0</p>`;
+ <div class="credit"><b>Mis Finanzas 360°</b><span>Creada por Gyssel Karina Diaz Quintero</span><small>Versión 5.1 · © 2026 · Todos los derechos reservados</small></div>`;
 }};
 
 function movList(){
@@ -788,6 +790,25 @@ function chipsHtml(type,sel){const cs=catsFor(type);if(sel&&!cs.includes(sel))cs
  const all=cs.map(c=>`<label class="chip"><input type="radio" name="category" value="${esc(c)}" ${c===sel?'checked':''}><span>${catEmoji(c)} ${esc(c)}</span></label>`).concat([`<label class="chip"><input type="radio" name="category" value="__otra"><span>＋ Otra</span></label>`]);
  const h=Math.ceil(all.length/2);return `<div class="crow">${all.slice(0,h).join('')}</div><div class="crow">${all.slice(h).join('')}</div>`}
 
+/* ---- Administración de usuarios (solo administradora) ---- */
+const isAdmin=()=>!!(session&&session.user&&session.user.admin);
+function kicked(msg){lsDel(K('cache'));lsDel(K('queue'));lsDel(K('url'));session=null;saveSession();data=EMPTY();queue=[];sheetUrl='';lastFetch=0;L.name='';showLock('name',msg||'Ya no tienes acceso a esta app.')}
+let admData=null;
+function adminView(){openSheet('Administrar usuarios',`<div id="admBox"><p class="muted"><span class="spin"></span> Cargando usuarios…</p></div>`,{submit:'Listo',onSubmit(){}});admLoad()}
+function admLoad(){api('usuarios').then(r=>{admData=r;admDraw()}).catch(e=>{if(e.code==='AUTH')return authLost();if(e.code==='BLOCKED')return kicked(e.message);const b=$('#admBox');if(b)b.innerHTML=`<p class="muted">${esc(e.code==='NET'?'Sin conexión. Conéctate a internet para administrar usuarios.':e.message)}</p>`})}
+function admDraw(){const b=$('#admBox');if(!b||!admData)return;const us=admData.users;
+ const fdt=s=>s?shortDate(String(s).slice(0,10))+(String(s).slice(0,4)!==today().slice(0,4)?' '+String(s).slice(0,4):''):'—';
+ b.innerHTML=`<p class="muted" style="margin:0 0 10px">${us.length} de ${admData.max} usuarios. Si le quitas el acceso a alguien, su sesión se cierra en todos sus equipos y no puede volver a entrar.</p>
+ <label class="check"><input type="checkbox" id="admReg" ${admData.abierto?'checked':''}><span>Permitir que personas nuevas creen su usuario<br><small class="muted">Si lo desactivas, nadie más puede registrarse con el enlace.</small></span></label>
+ <div class="list" style="box-shadow:none">${us.map(x=>`<div class="tx hrow"><span class="emo ${x.blocked?'':'in'}">${x.admin?'👑':x.blocked?'🚫':'👤'}</span><span style="min-width:0"><div class="t">${esc(x.name)}${x.admin?' (tú)':''}</div><div class="s">${x.blocked?'Sin acceso':'Activa'} · último ingreso ${fdt(x.last)}</div></span><span class="a">${x.admin?'':x.blocked?`<button type="button" class="btn sm soft" onclick="admAccess('${x.id}',false)">Devolver acceso</button><small><button type="button" class="link" style="min-height:26px;font-size:12px;color:var(--out)" onclick="admDelete('${x.id}')">Eliminar</button></small>`:`<button type="button" class="btn sm ghost" style="color:var(--out)" onclick="admAccess('${x.id}',true)">Quitar acceso</button>`}</span></div>`).join('')}</div>
+ <div class="hint" style="margin-top:10px">“Eliminar” libera el cupo y el nombre. Su Hoja de Google se queda en tu Drive por si la necesitas; puedes borrarla tú desde Drive.</div>`;
+ $('#admReg').onchange=e=>admCall('registro',[e.target.checked],e.target.checked?'Registros nuevos permitidos ✓':'Registros nuevos cerrados ✓')}
+function admCall(fn,args,ok){const b=$('#admBox');b&&b.classList.add('busy');api(fn,...args).then(r=>{admData=r;admDraw();toast(ok)}).catch(e=>{toast(e.code==='NET'?'Sin conexión. Inténtalo de nuevo.':e.message);admDraw()}).finally(()=>{const b=$('#admBox');b&&b.classList.remove('busy')})}
+function admAccess(id,block){const x=admData.users.find(y=>y.id===id);if(!x)return;
+ if(block&&!confirm('¿Quitarle el acceso a '+x.name+'? Se cerrará su sesión y no podrá entrar hasta que se lo devuelvas.'))return;
+ admCall('acceso',[id,block],block?x.name+' ya no tiene acceso ✓':x.name+' tiene acceso de nuevo ✓')}
+function admDelete(id){const x=admData.users.find(y=>y.id===id);if(!x)return;
+ if(!confirm('¿Eliminar el usuario '+x.name+'? Esto no se puede deshacer en la app.'))return;admCall('eliminarUsuario',[id],x.name+' eliminado ✓')}
 /* ---- Gastos fijos ---- */
 const fixedRef=(f,k)=>'fixed:'+f.id+':'+k;
 const fixedDue=(f,k)=>k+'-'+pad(Math.min(+f.day||1,daysIn(k)));
@@ -960,14 +981,15 @@ async function submitPin(){
  if(m==='chg1'){L.first=pin;return showLock('chg2')}
  if(m==='chg2'){if(pin!==L.first)return pinError('Los PIN no coinciden.','chg1');setBusy(true);
   try{await api('cambiarPin',L.old,pin);session.salt=uid();session.hash=pinHash(session.salt,pin);saveSession();hideLock();unlocked=true;toast('PIN cambiado ✓')}
-  catch(e){setBusy(false);if(e.code==='AUTH')return authLost();pinError(e.code==='NET'?'Sin conexión. Inténtalo con internet.':e.message,e.code==='BADPIN'?'chg0':null)}return}
+  catch(e){setBusy(false);if(e.code==='AUTH')return authLost();if(e.code==='BLOCKED')return kicked(e.message);pinError(e.code==='NET'?'Sin conexión. Inténtalo con internet.':e.message,e.code==='BADPIN'?'chg0':null)}return}
  setBusy(true);
  try{const r=await api(m==='new2'?'registrar':'ingresar',L.name,pin);
   const prevId=session&&session.user&&session.user.id;
   session={token:r.token,user:r.user,salt:uid()};session.hash=pinHash(session.salt,pin);saveSession();lsSet('mf360_lastname',r.user.name);
   if(m==='new2')toast('¡Bienvenida/o, '+r.user.name+'! 🎉');openApp(prevId!==r.user.id)}
  catch(e){setBusy(false);
-  if(e.code==='NOUSER'||e.code==='EXISTS'||e.code==='NAME')return showLock('name',e.message);
+  if(e.code==='BLOCKED')return kicked(e.message);
+  if(e.code==='NOUSER'||e.code==='EXISTS'||e.code==='NAME'||e.code==='CLOSED'||e.code==='LIMIT')return showLock('name',e.message);
   pinError(e.code==='NET'?'Sin conexión. Conéctate a internet para entrar.':e.message,m==='new2'?'new1':null)}
 }
 function openApp(fresh){
