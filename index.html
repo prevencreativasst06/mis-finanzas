@@ -472,14 +472,16 @@ if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener
 const movesIn=k=>data.movements.filter(m=>String(m.date||'').startsWith(k));
 const sumType=(arr,t)=>arr.filter(m=>m.type===t).reduce((a,m)=>a+(+m.amount||0),0);
 function byCat(arr){const o={};arr.filter(m=>m.type==='gasto').forEach(m=>{o[m.category||'Otros']=(o[m.category||'Otros']||0)+(+m.amount||0)});return Object.entries(o).sort((a,b)=>b[1]-a[1])}
+/* Una cuota cuenta como pagada si hay un abono ese mismo mes o en los 10 días antes de su fecha */
+const paidFor=(ref,due)=>!!due&&payHistory(ref).some(p=>p.date.slice(0,7)===String(due).slice(0,7)||(p.date<due&&diffDays(p.date,due)<=10));
 const paidIn=(ref,k)=>data.movements.some(m=>m.ref===ref&&String(m.date).startsWith(k))||data.payments.some(p=>p.ref===ref&&String(p.date).startsWith(k));
 function events(k){
  const ev=[];
- data.debts.forEach(d=>{const day=+d.day;if(!day)return;const paid=paidIn('debt:'+d.id,k);if(+d.balance<=0&&!paid)return;
+ data.debts.forEach(d=>{const day=+d.day;if(!day)return;const paid=paidFor('debt:'+d.id,k+'-'+pad(Math.min(day,daysIn(k))));if(+d.balance<=0&&!paid)return;
   ev.push({date:k+'-'+pad(Math.min(day,daysIn(k))),title:d.name,sub:d.entity||'Deuda',amount:+d.installment||0,kind:'debt',id:d.id,paid})});
  data.loans.forEach(l=>{const cobro=l.direction==='por cobrar';
   payHistory('loan:'+l.id).filter(p=>p.date.startsWith(k)).forEach(p=>ev.push({date:p.date,title:(cobro?'Te pagó ':'Pagaste a ')+l.person,sub:'Abono registrado',amount:p.amount,kind:'loan',id:l.id,paid:true,cobro}));
-  if(!l.next||!String(l.next).startsWith(k)||+l.balance<=0)return;
+  if(!l.next||!String(l.next).startsWith(k)||+l.balance<=0||paidFor('loan:'+l.id,l.next))return;
   ev.push({date:l.next,title:(cobro?'Cobrar a ':'Pagar a ')+l.person,sub:'Préstamo · saldo',amount:+l.balance,kind:'loan',id:l.id,paid:false,cobro})});
  return ev.sort((a,b)=>a.date.localeCompare(b.date));
 }
@@ -498,7 +500,7 @@ function histBtn(ref){const n=payHistory(ref).length;return n?`<button class="bt
 function loanBadge(l){
  if(+l.balance<=0)return '<span class="st ok">Saldado ✓</span>';
  const cobro=l.direction==='por cobrar',m=today().slice(0,7),paidM=paidIn('loan:'+l.id,m);
- if(paidM&&(!l.next||String(l.next).slice(0,7)>m))return `<span class="st ok">${cobro?'Cobrado este mes ✓':'Pagado este mes ✓'}</span>`;
+ if((paidM&&(!l.next||String(l.next).slice(0,7)>m))||paidFor('loan:'+l.id,l.next))return `<span class="st ok">${cobro?'Cobrado este mes ✓':'Pagado este mes ✓'}</span>`;
  if(l.next){const nx=evStatus({date:l.next,paid:false});return `<span class="st ${nx[1]}">${shortDate(l.next)} · ${nx[0]}</span>`}
  return paidM?'<span class="st ok">Abonado este mes ✓</span>':'';
 }
@@ -694,7 +696,7 @@ configuracion(){
  ${sheetUrl?`<a class="btn soft block" href="${esc(sheetUrl)}" target="_blank" rel="noopener">📄 Abrir mi Hoja de Google ↗</a>`:''}
  <div class="btns"><button class="btn ghost sm" onclick="exportData()">Exportar copia</button><label class="btn ghost sm">Importar copia<input type="file" accept=".json,application/json" hidden onchange="importData(this)"></label></div>
  <div class="btns"><button class="btn danger sm" onclick="wipeAll()">Borrar todos los datos</button></div></div>
- <p class="muted" style="text-align:center;font-size:12px">Mis Finanzas 360° · versión 4.0</p>`;
+ <p class="muted" style="text-align:center;font-size:12px">Mis Finanzas 360° · versión 4.1</p>`;
 }};
 
 function movList(){
