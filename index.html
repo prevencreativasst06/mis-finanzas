@@ -12,6 +12,7 @@
 <meta name="application-name" content="Mis Finanzas">
 <meta name="theme-color" content="#f5f1ff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#110f1e" media="(prefers-color-scheme: dark)">
+<script>/* La franja de la hora toma el color del tema elegido en la app (antes de pintar) */try{var t=(JSON.parse(localStorage.getItem("mf360_prefs")||"{}")||{}).theme;if(t==="dark"||t==="light"){var c=t==="dark"?"#110f1e":"#f5f1ff";document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){m.setAttribute("content",c);m.removeAttribute("media")})}}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="data:image/webp;base64,UklGRsgHAABXRUJQVlA4ILwHAAAQIwCdASpgAGAAPlEei0QjoaEYDHY4OAUEtQBZYcAljkWWJ+/cAJUfmkjf+J90/PMh+zHrPf6D1Rf431AP5l/t+s29AD9d/Tn9l39yPRurMrhIxLt1Gavnxzg1lM1fykag3S5SiOZl8dgdEed5SmYZtcXmepzB5/zRT/HZAIhXMKKuxL4/AJU296DZ/uVjM8UBLF70mkrOoBdVQwoYAwFht7if6pt1yr8FirDz0C//9RwIMKfdRR/R3XzU074FwZAo+5wDEZ78mvc02d5hpwSNLxbcPILJEVfpGNmG+j1QodzG41DYfVzPezqcJOIA9bsTnovJg243kNA7mANFIbI8/4/zwPSST/i7SfjRCulXpfVnoCMnnuNTX4nDQwoSeVAAAP7+7FgTz8N8P1o+y0ko2/LIFLGbEVOmX/8O787vwZQOCRi/v3IwycHu/5c2kZRr+z/COvpQS9WiW3H1ULVNThXHEvcdq12c2P+VqoeL3Hu4l06kEUwgdvmhJDJTM2owHLyv7PhY8hzG01lNkFsTmyoNZwnZuc3SCAJ/2R8q7j/aQLbCNyQxvq5qnpmEO79mEIHltOaiif9X5+d4Z/ol9vWb4hJgjsVeYhQF4HAlBWcahoz7N0+rRa6Apo3NkF77s5k1kvJ9Imb9Z1wAhp23LpzVzVFm0Ki1uiRxGni3x1MFXC5d/5g5rbHnArTsqcXAtS5mf1t6RmYx/mXOmwsFiSCVVq606N3hSkWBYI6Xi/Q2dnsb4RjJv6MCzDchuG2uGfpTHGTiN6Kf0WbNsuc3r64UNvkLPFfcp3paXHES2v6bInFCaXe0dv7kP5/pZ8/91ICirAcjpX58mK9cY/Lu/QziY1kES1IjOXh+P/0+9ZaSYdpBNlr/DihW2xBCZrapO9MGoyGTbEPbAaJ1uUKCJ53KofkHOT7ypCcQi62v2u3prsjHwQbqTCva0hv9TG7rrnd1JMQr7rJL0CMLFGtoBAWd09w6vpqKkDAmCZBauVk/94lp2Z2DPQZ8e9Hv9Pc0EeAr/GsqLwr1afmpw8Fg+l181ovE4cz9CCyxsB4XrJFVmqwXUPH4Gd3voVti5a3LLTXMDwfFZWXOLzWCcZTd1JUOXdPmxMOqGftxqjlXmtqMera1GgNBGjig28zfqd89Ju5jymkgXyu/SXtZnfUTw9F5jjxuSLztiT0v0u3Fskkwi74jFznXeu7gkK/L10QhlQ4CmMNb8mY7gn8vejy/7gSMK9Io4Hw5o4wPP+dp4TpgfDrJMgJLEU/INgERJ7swBba0b6fPEziPFvnbeMP/yOjbpQ3pRAcYj0CRGP/iEzqteYk4V9m05OaQwLfNtW/fL6YCwGKclgtDgYHYePvJOj4pyTU1RddTDoXtwGvE5N4eEosRh+vjZ1W4gGMUHxuyc8rTM8rrh+t2xcG5yoSt3qHtra7L6aZRUmSTD9/QZ3YsZyMjDPTdhPxC99FRO/kN+QyTqZQZPJ5cU+u5bYDJHGH6+YiSAWnSQGZtIqx0BMua7JM3ZwJy2XX+WkjQixdRw1eeHt3bcH6ECT6i+rk+pqBZ9p/p6rSH+TJyLlBPKKT7W4zZOMV4uq+ruS2GHsJpewKsuEGripR5KJDbv+Cwnz7v2/1os0RcK7Fo0Y+qT8jZNyy3eQBapUXtozE8U4JSHsXnBO3ckAWjNm9uGySNf9q5lSlBCuRWoVez3atpfwPX3TbN9prcTTix20K0zYEpDMRvBC9MEIGy6eH8BSVn8X987XAir/vogcyR8UIZy8vuIAthEZoh60UyqfwNboSf/6NdQ7shIUhMJItlfho0fiFMgrsKPMnCY6olr4lH+0Lis7dpWnnVJuKiDaPNwrtLXr+7zwe5Kyf/kvW2ut+eJoecxoZjrIZVicKTM/KPFUeV4VGKwY752zYBD6ldOoiiPWvcbGIsZ01C7VBHLgjPEvw3b/aPqd/kkFqrg4vXuxKgQR/XmCsxZzIlnGXoL6sMCrzBho8yAujh3dT1PxEq4AP32iOBmHrOHuK2PV9dNr05+mX0wcjDfV59/Gb+0k1w1Iz4J7g5As3ZQ/xsmvaOzY/XvNUMPZqyf6IpJYMu/ereIeT0+hhnbPAcs05knjAy25+J29dRC6ZcSfNBk+BcDjfW/IsPq/ENqQNwA+hSVM6iVIDhupnq3gLNOL4EAdB7y04Y3XgzF/AZK+L0vEemO3WlRI706lhERZl0GxAUmvuIdg8rHzNcfLmTw7NX0q4B376HobAwcSpDJZPAvC7nwNuZlGc46BuRvxnym7pLSvDrjCo8BD4PYy5/4U51xav5bt0hdba8yvGqplu00sYtEHNfsxtDils0KmYZSD/6jxB/Fzgo4P1bPsop0Ri1ppCIeHUYT3HOhsnwGtG9u93JFDscgnfCZwmKEporcWtxqPa7+cMLvqebvTdjHVdwq/4KtU0hl1VAXeOhHOaHEqKzl4oztaBYnQUPktPP43xCEfRIcRNXIeYNKM7jPcH9X+RDbxUj3pcBM8plPvBzZeltNjpFhjYn09YEX4NDlesSuleAE0W4Iyv28p0P0YHzgALQnq6dUHvGNxXQmb9IIfgG830MGywIId9iuH/5IUV107F0MiVYd3ZS7ruqKovKHdMR0tkFUy+KQdmaAAA=">
@@ -464,7 +465,7 @@ function savePrefs(){lsSet('mf360_prefs',JSON.stringify(prefs))}
 const S={tab:'inicio',month:today().slice(0,7),movType:'todos',q:'',pagos:'deudas',mas:null,per:'mes',day:today(),from:'',to:''};
 let sheetOpen=false,renderLater=false;
 function isDark(){return prefs.theme==='dark'||(prefs.theme!=='light'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)}
-function applyTheme(){document.documentElement.dataset.theme=prefs.theme||'auto';const b=document.getElementById('themeBtn');if(b){const d=isDark();b.textContent=d?'☀':'☾';b.setAttribute('aria-label',d?'Cambiar a modo día':'Cambiar a modo noche')}}
+function applyTheme(){document.documentElement.dataset.theme=prefs.theme||'auto';const tc=isDark()?'#110f1e':'#f5f1ff';document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{if(m.getAttribute('content')!==tc)m.setAttribute('content',tc);if(m.hasAttribute('media'))m.removeAttribute('media')});const b=document.getElementById('themeBtn');if(b){const d=isDark();b.textContent=d?'☀':'☾';b.setAttribute('aria-label',d?'Cambiar a modo día':'Cambiar a modo noche')}}
 function toggleTheme(){prefs.theme=isDark()?'light':'dark';savePrefs();applyTheme();if(S.tab==='mas'&&S.mas==='configuracion')render()}
 if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener&&matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
 
@@ -696,7 +697,7 @@ configuracion(){
  ${sheetUrl?`<a class="btn soft block" href="${esc(sheetUrl)}" target="_blank" rel="noopener">📄 Abrir mi Hoja de Google ↗</a>`:''}
  <div class="btns"><button class="btn ghost sm" onclick="exportData()">Exportar copia</button><label class="btn ghost sm">Importar copia<input type="file" accept=".json,application/json" hidden onchange="importData(this)"></label></div>
  <div class="btns"><button class="btn danger sm" onclick="wipeAll()">Borrar todos los datos</button></div></div>
- <p class="muted" style="text-align:center;font-size:12px">Mis Finanzas 360° · versión 4.1</p>`;
+ <p class="muted" style="text-align:center;font-size:12px">Mis Finanzas 360° · versión 4.3</p>`;
 }};
 
 function movList(){
@@ -772,6 +773,13 @@ function chipsHtml(type,sel){const cs=catsFor(type);if(sel&&!cs.includes(sel))cs
  const all=cs.map(c=>`<label class="chip"><input type="radio" name="category" value="${esc(c)}" ${c===sel?'checked':''}><span>${catEmoji(c)} ${esc(c)}</span></label>`).concat([`<label class="chip"><input type="radio" name="category" value="__otra"><span>＋ Otra</span></label>`]);
  const h=Math.ceil(all.length/2);return `<div class="crow">${all.slice(0,h).join('')}</div><div class="crow">${all.slice(h).join('')}</div>`}
 
+/* ---- Vincular un movimiento a una deuda o préstamo ---- */
+function linkOpts(type){const o=[];
+ if(type==='gasto'){data.debts.filter(d=>+d.balance>0).forEach(d=>o.push(['debt:'+d.id,'💳 '+d.name+' · saldo '+money(d.balance)]));
+  data.loans.filter(l=>l.direction!=='por cobrar'&&+l.balance>0).forEach(l=>o.push(['loan:'+l.id,'🤝 Préstamo de '+l.person+' · saldo '+money(l.balance)]))}
+ else data.loans.filter(l=>l.direction==='por cobrar'&&+l.balance>0).forEach(l=>o.push(['loan:'+l.id,'🤝 '+l.person+' me paga · saldo '+money(l.balance)]));
+ return o}
+function linkSelect(type){const o=linkOpts(type);return `<option value="">No, es un movimiento normal</option>`+o.map(([v,t])=>`<option value="${v}">${esc(t)}</option>`).join('')}
 /* ---- Movimiento ---- */
 function movementForm(id,presetType){
  const old=id?data.movements.find(m=>m.id===id):null;const m=old||{type:presetType||(S.tab==='movimientos'&&S.movType!=='todos'?S.movType:'gasto'),date:(S.tab==='movimientos'&&S.per==='dia'&&!S.q?S.day:today())};
@@ -780,19 +788,26 @@ function movementForm(id,presetType){
  ${fText('description','Concepto',m.description,'Ej. Mercado, salario, arriendo…','enterkeyhint="done"')}
  <div class="field"><span class="flabel">Categoría</span><div class="chips rows2" id="chips">${chipsHtml(m.type,m.category)}</div></div>
  <div class="field" id="otraBox" hidden><input name="customCat" placeholder="Nombre de la nueva categoría" autocomplete="off"></div>
+ ${old&&old.ref?'':`<div class="field" id="linkBox" ${linkOpts(m.type).length?'':'hidden'}><label>¿Es pago de una deuda o préstamo?</label><select name="link">${linkSelect(m.type)}</select></div>`}
  <div class="two">${fDate('date','Fecha',m.date)}${fText('note','Nota (opcional)',m.note,'')}</div>
  ${old&&old.ref?`<div class="hint">Vinculado a ${old.ref.startsWith('debt:')?'una deuda':'un préstamo'}: si cambias el valor o lo eliminas, el saldo se ajusta solo.</div>`:''}`;
  openSheet(old?'Editar movimiento':'Nuevo movimiento',body,{
   onSubmit(fd){const amount=amt(fd.get('amount'));if(!amount)return 'Escribe el valor';let cat=fd.get('category');if(cat==='__otra')cat=(fd.get('customCat')||'').trim();if(!cat)return 'Elige una categoría';
    const nu=Object.assign({},old||{},{id:old?old.id:uid(),type:fd.get('type'),amount,description:(fd.get('description')||'').trim()||cat,category:cat,date:fd.get('date')||today(),note:(fd.get('note')||'').trim()});
+   const link=!(old&&old.ref)&&fd.get('link')?String(fd.get('link')):'',lk=link?refItem(link):null;
+   if(lk){nu.ref=link;if(!(fd.get('description')||'').trim())nu.description=(lk.kind==='debt'?'Pago ':lk.cobro?'Abono de ':'Abono a ')+lk.name}
    if(old&&old.ref)adjustRef(old.ref,+old.amount);if(nu.ref)adjustRef(nu.ref,-nu.amount);
    upsert('movements',nu);if(!old){if(nu.date.slice(0,7)!==S.month)S.month=nu.date.slice(0,7);if(S.per==='dia'||S.per==='semana')S.day=nu.date}
    if(old&&old.ref){const p=data.payments.find(x=>x.move===old.id);if(p)upsert('payments',Object.assign({},p,{amount:nu.amount,date:nu.date,note:nu.note||p.note,balance:Math.max(0,(+p.balance||0)-(nu.amount-(+old.amount||0)))}))}
+   if(lk){const it=refItem(link).it,nb=Math.max(0,+it.balance||0);upsert('payments',{id:uid(),ref:link,title:nu.description,date:nu.date,amount:nu.amount,balance:nb,note:nu.note,move:nu.id});
+    if(lk.kind==='loan'&&nb>0&&it.next&&paidFor(link,it.next))upsert('loans',Object.assign({},it,{next:sugNext(it.next)}));
+    return void toast(nb<=0?'¡'+lk.name+' quedó en $ 0! 🎉':'Registrado y descontado de '+lk.name+' ✓')}
    toast(old?'Cambios guardados':(nu.type==='ingreso'?'Ingreso':'Gasto')+' registrado ✓')},
   onDelete:old?()=>{if(!confirm('¿Eliminar este movimiento?'))return false;if(old.ref){adjustRef(old.ref,+old.amount);const p=data.payments.find(x=>x.move===old.id);if(p)removeItem('payments',p.id)}removeItem('movements',old.id);toast('Movimiento eliminado')}:null});
  const f=$('#sheetForm');
- f.querySelectorAll('#typeSeg button').forEach(b=>b.onclick=()=>{f.type.value=b.dataset.v;f.querySelectorAll('#typeSeg button').forEach(x=>x.classList.toggle('on',x===b));$('#chips').innerHTML=chipsHtml(b.dataset.v,null);$('#otraBox').hidden=true});
- f.addEventListener('change',e=>{if(e.target.name==='category'){const o=e.target.value==='__otra';$('#otraBox').hidden=!o;if(o)setTimeout(()=>f.customCat.focus(),60)}});
+ f.querySelectorAll('#typeSeg button').forEach(b=>b.onclick=()=>{f.type.value=b.dataset.v;f.querySelectorAll('#typeSeg button').forEach(x=>x.classList.toggle('on',x===b));$('#chips').innerHTML=chipsHtml(b.dataset.v,null);$('#otraBox').hidden=true;const lb=$('#linkBox');if(lb){lb.querySelector('select').innerHTML=linkSelect(b.dataset.v);lb.hidden=!linkOpts(b.dataset.v).length}});
+ f.addEventListener('change',e=>{if(e.target.name==='link'&&e.target.value){const r=refItem(e.target.value);const c=r.kind==='debt'?'Deudas':r.cobro?'Cobro de préstamo':'Préstamos';const rb=[...f.querySelectorAll('input[name=category]')].find(x=>x.value===c);if(rb){rb.checked=true;$('#otraBox').hidden=true;rb.closest('label').scrollIntoView({block:'nearest',inline:'center'})}}
+  if(e.target.name==='category'){const o=e.target.value==='__otra';$('#otraBox').hidden=!o;if(o)setTimeout(()=>f.customCat.focus(),60)}});
 }
 function adjustRef(ref,delta){const [kind,id]=ref.split(':');const col=kind==='debt'?'debts':'loans';const it=data[col].find(x=>x.id===id);if(!it)return;upsert(col,Object.assign({},it,{balance:Math.max(0,(+it.balance||0)+delta)}))}
 
